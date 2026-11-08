@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["ES2022"],
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "skipLibCheck": true,
+    "allowJs": false,
+    "noEmit": true,
+    "types": ["node", "vscode"]
+  },
+  "include": ["src", "vendor/dhole.esm.d.ts"]
+}

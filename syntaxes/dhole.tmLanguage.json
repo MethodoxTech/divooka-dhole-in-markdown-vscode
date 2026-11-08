@@ -1,0 +1,95 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Dhole",
+  "scopeName": "source.dhole",
+  "comment": "Dhole: charts and diagrams written as text (https://wiki.methodox.io/Libraries/Dhole/Language/). The colouring follows the parts every kind shares - the kind's word on the first line, settings, block words, arrows, labels after a colon, attributes in brackets, quoted names, numbers, dates and comments.",
+  "patterns": [
+    { "include": "#comment" },
+    { "include": "#separator" },
+    { "include": "#kind" },
+    { "include": "#setting" },
+    { "include": "#block" },
+    { "include": "#line" }
+  ],
+  "repository": {
+    "comment": {
+      "match": "^\\s*#.*$",
+      "name": "comment.line.number-sign.dhole"
+    },
+    "separator": {
+      "match": "^\\s*-{3,}\\s*$",
+      "name": "meta.separator.dhole punctuation.separator.diagram.dhole"
+    },
+    "kind": {
+      "comment": "The first line of a diagram: its kind's word (or one of the words it answers to) and the title after it.",
+      "match": "(?i)^\\s*(flowchart|flow|graph|flowchart-v2|sequence(?:\\s+diagram)?|sequenceDiagram|seq|state(?:\\s+(?:diagram|machine))?|states|stateDiagram(?:-v2)?|class(?:\\s+diagram)?|classes|classDiagram|uml|entity|entities|er(?:\\s+diagram)?|erDiagram|entity\\s+relationship|database|schema|mind\\s*map|mindmap|mind|tree|timeline|history|milestones|gantt(?:\\s+chart)?|schedule|plan|pie(?:\\s+chart)?|donut|doughnut|ring|bars?(?:\\s+chart)?|columns?(?:\\s+chart)?|lines?(?:\\s+(?:chart|plot))?|xy(?:-?chart)?|scatter(?:\\s+plot)?|points|radar(?:\\s+chart)?|spider|web|quadrants?(?:\\s+chart)?|matrix|sankey(?:-beta)?|flows|table|grid|kanban(?:\\s+board)?|board)\\b(:?)(.*)$",
+      "captures": {
+        "1": { "name": "keyword.control.kind.dhole" },
+        "2": { "name": "punctuation.separator.dhole" },
+        "3": { "name": "entity.name.title.dhole" }
+      }
+    },
+    "setting": {
+      "comment": "A setting: a word every kind (or one kind) takes, a colon and its value. Words of the common settings and the commoner kinds' own.",
+      "match": "(?i)^(\\s*)(title|subtitle|caption|source|note|theme|style|look|font|typeface|face|size|direction|flow|orientation|layout|rankdir|labels|x\\s*axis|y\\s*axis|range|x\\s*range|y\\s*range|stack|stacked|horizontal|values|value\\s+labels|curve|markers|area|trend|connect|hole|order|sort|centre|center|start|today|skip|holidays|format|dates|unit|units|amounts|numbers|autonumber|numbers|spread|mirror|activations)(\\s*:)(\\s.*)?$",
+      "captures": {
+        "2": { "name": "variable.parameter.setting.dhole" },
+        "3": { "name": "punctuation.separator.key-value.dhole" },
+        "4": { "patterns": [{ "include": "#value" }] }
+      }
+    },
+    "block": {
+      "comment": "Words that open a group, a section, a sequence's block or a participant.",
+      "match": "(?i)^(\\s*)(group|subgraph|section|loop|if|alt|else|opt|optional|par|parallel|and|critical|break|region|end|participant|actor|database|note(?:\\s+(?:over|left\\s+of|right\\s+of))?|divider)\\b",
+      "captures": {
+        "2": { "name": "keyword.control.dhole" }
+      }
+    },
+    "line": {
+      "patterns": [
+        { "include": "#quoted" },
+        { "include": "#attributes" },
+        { "include": "#arrow" },
+        { "include": "#label" },
+        { "include": "#value" }
+      ]
+    },
+    "quoted": {
+      "match": "\"(?:\\\\.|[^\"\\\\])*\"?|“[^”]*”?",
+      "name": "string.quoted.double.dhole"
+    },
+    "attributes": {
+      "begin": "\\[",
+      "end": "\\]|$",
+      "beginCaptures": { "0": { "name": "punctuation.definition.attributes.begin.dhole" } },
+      "endCaptures": { "0": { "name": "punctuation.definition.attributes.end.dhole" } },
+      "name": "meta.attributes.dhole",
+      "patterns": [
+        { "match": ",", "name": "punctuation.separator.dhole" },
+        { "match": "[^,\\]]+", "name": "support.constant.attribute.dhole" }
+      ]
+    },
+    "arrow": {
+      "comment": "Every arrow a kind has: plain, dashed and thick ones, both-way ones, UML's triangles and diamonds, a cardinality at each end, and crow's feet drawn in characters.",
+      "match": "(?<=\\s|^)(?:\\|o|\\|\\||\\}o|\\}\\|)(?:--|\\.\\.)(?:o\\||\\|\\||o\\{|\\|\\{)(?=\\s|$)|(?<=\\s|^)(?:0\\.\\.1|1\\.\\.\\*|0\\.\\.\\*|1|\\*|n|many)-{1,3}(?:0\\.\\.1|1\\.\\.\\*|0\\.\\.\\*|1|\\*|n|many)(?=\\s|$)|<\\|--|<\\|\\.\\.|--\\|>|\\.\\.\\|>|<\\|-|-\\|>|<-->|<->|<=>|<--|<\\.\\.|<-|-->>|->>|-->|\\.\\.>|==>|=>|->|(?<=\\s)(?:\\*--|--\\*|o--|--o|\\*-|-\\*|o-|-o|---|--|\\.\\.|==)(?=\\s)",
+      "name": "keyword.operator.arrow.dhole"
+    },
+    "label": {
+      "comment": "What follows a colon and a space: a label, a value, an event.",
+      "match": "(:)(\\s+)([^\\[]*)",
+      "captures": {
+        "1": { "name": "punctuation.separator.label.dhole" },
+        "3": { "patterns": [{ "include": "#quoted" }, { "include": "#value" }, { "match": "\\S+", "name": "string.unquoted.label.dhole" }] }
+      }
+    },
+    "value": {
+      "patterns": [
+        { "match": "\\b\\d{4}-\\d{1,2}(?:-\\d{1,2})?(?:[ T]\\d{1,2}:\\d{2}(?::\\d{2})?)?\\b", "name": "constant.numeric.date.dhole" },
+        { "match": "(?i)\\b\\d+(?:\\.\\d+)?\\s*(?:d|days?|w|wk|weeks?|h|hr|hours?|min|mins|minutes?)\\b", "name": "constant.numeric.duration.dhole" },
+        { "match": "(?<![\\w.])[-+−]?\\d[\\d_]*(?:\\.\\d+)?%?(?![\\w])", "name": "constant.numeric.dhole" },
+        { "match": "\\(\\s*[-+]?\\d+(?:\\.\\d+)?\\s*,\\s*[-+]?\\d+(?:\\.\\d+)?\\s*\\)", "name": "constant.numeric.point.dhole" },
+        { "match": "(?i)\\b(?:on|off|yes|no|true|false|after|milestone)\\b", "name": "constant.language.dhole" }
+      ]
+    }
+  }
+}
