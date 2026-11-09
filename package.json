@@ -1,0 +1,193 @@
+{
+  "name": "divooka-dhole-in-markdown",
+  "displayName": "Dhole in Markdown",
+  "description": "Draws Dhole diagrams - flowcharts, sequence, state, class and entity diagrams, mind maps, timelines, Gantt charts and charts written as text - in VS Code's Markdown preview, as Divooka draws them, with their problems in the Problems panel.",
+  "version": "0.1.0",
+  "publisher": "methodox",
+  "license": "MIT",
+  "author": "Methodox Technologies, Inc.",
+  "homepage": "https://wiki.methodox.io/Libraries/Dhole/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MethodoxTech/divooka-dhole-in-markdown-vscode.git"
+  },
+  "bugs": {
+    "url": "https://github.com/MethodoxTech/divooka-dhole-in-markdown-vscode/issues"
+  },
+  "icon": "images/icon.png",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Visualization",
+    "Programming Languages",
+    "Other"
+  ],
+  "keywords": [
+    "dhole",
+    "divooka",
+    "markdown",
+    "diagram",
+    "flowchart",
+    "sequence diagram",
+    "gantt",
+    "mermaid"
+  ],
+  "main": "./dist/extension.js",
+  "activationEvents": [
+    "onLanguage:markdown",
+    "onLanguage:dhole"
+  ],
+  "contributes": {
+    "markdown.markdownItPlugins": true,
+    "markdown.previewScripts": [
+      "./media/dhole.min.js",
+      "./media/preview.js"
+    ],
+    "markdown.previewStyles": [
+      "./media/preview.css"
+    ],
+    "languages": [
+      {
+        "id": "dhole",
+        "aliases": [
+          "Dhole",
+          "dhole"
+        ],
+        "extensions": [
+          ".dhole"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "dhole",
+        "scopeName": "source.dhole",
+        "path": "./syntaxes/dhole.tmLanguage.json"
+      },
+      {
+        "scopeName": "markdown.dhole.codeblock",
+        "path": "./syntaxes/dhole-markdown-injection.json",
+        "injectTo": [
+          "text.html.markdown"
+        ],
+        "embeddedLanguages": {
+          "meta.embedded.block.dhole": "dhole"
+        }
+      }
+    ],
+    "commands": [
+      {
+        "command": "dhole.openInPlayground",
+        "title": "Open in the Dhole Playground",
+        "category": "Dhole"
+      },
+      {
+        "command": "dhole.previewFile",
+        "title": "Open Preview",
+        "category": "Dhole",
+        "icon": "$(open-preview)"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "dhole.previewFile",
+          "when": "editorLangId == dhole",
+          "group": "navigation"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "dhole.previewFile",
+          "when": "editorLangId == dhole"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Dhole",
+      "properties": {
+        "dhole.preview.theme": {
+          "type": "string",
+          "default": "auto",
+          "enum": [
+            "auto",
+            "light",
+            "dark",
+            "presentation",
+            "minimal",
+            "classic",
+            "print",
+            "golden",
+            "quiet gold",
+            "silver gold",
+            "high contrast"
+          ],
+          "enumDescriptions": [
+            "Light in a light editor theme, dark in a dark one, high contrast in a high-contrast one.",
+            "Dark ink on white: Dhole's default.",
+            "Light ink on a near-black surface.",
+            "Larger text and heavier marks.",
+            "No gridlines and no axis lines.",
+            "A framed plotting area with gridlines both ways.",
+            "Black ink and grey marks.",
+            "Divooka's Golden editor palette.",
+            "Divooka's Quiet Gold editor palette.",
+            "Divooka's Silver-Gold editor palette.",
+            "Divooka's Light High Contrast editor palette."
+          ],
+          "markdownDescription": "The theme a diagram is drawn in when its text names none (`theme:` in a diagram always wins)."
+        },
+        "dhole.preview.showProblems": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "List a diagram's problems under its picture in the preview."
+        },
+        "dhole.preview.language": {
+          "type": "string",
+          "default": "English",
+          "enum": [
+            "English",
+            "Chinese"
+          ],
+          "markdownDescription": "The language problems are said in, in the preview and in the Problems panel."
+        },
+        "dhole.diagnostics.enabled": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "Report the problems of `.dhole` files and of ` ```dhole ` blocks in Markdown in the Problems panel, at their line and column."
+        },
+        "dhole.codeLens.enabled": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "Show *Open in the Dhole Playground* above each ` ```dhole ` block in Markdown."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "build": "node esbuild.mjs",
+    "watch": "node esbuild.mjs --watch",
+    "typecheck": "tsc --noEmit",
+    "test": "npm run build && node --test \"test/*.test.mjs\"",
+    "test:preview": "npm run build && node test/preview-browser.mjs",
+    "package": "npm run build && vsce package --no-dependencies",
+    "vscode:prepublish": "npm run build",
+    "update-dhole": "node scripts/update-dhole.mjs",
+    "test:vscode": "npm run build && node test/integration/run.mjs"
+  },
+  "devDependencies": {
+    "@types/markdown-it": "^14.1.2",
+    "@types/node": "^20.11.0",
+    "@types/vscode": "1.90.0",
+    "@vscode/test-electron": "^3.1.0",
+    "@vscode/vsce": "^3.2.1",
+    "esbuild": "^0.25.0",
+    "markdown-it": "^14.1.0",
+    "playwright": "^1.48.0",
+    "typescript": "^5.6.0",
+    "vscode-oniguruma": "^2.0.1",
+    "vscode-textmate": "^9.1.0"
+  }
+}

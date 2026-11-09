@@ -1,0 +1,29 @@
+{
+  "comment": "Colours ```dhole blocks of Markdown with the Dhole grammar, as VS Code colours its own fenced languages.",
+  "scopeName": "markdown.dhole.codeblock",
+  "injectionSelector": "L:text.html.markdown",
+  "patterns": [{ "include": "#dhole-code-block" }],
+  "repository": {
+    "dhole-code-block": {
+      "begin": "(^|\\G)(\\s*)(`{3,}|~{3,})\\s*(?i:(dhole)(\\s+[^`~]*)?$)",
+      "name": "markup.fenced_code.block.markdown",
+      "end": "(^|\\G)(\\2|\\s{0,3})(\\3)\\s*$",
+      "beginCaptures": {
+        "3": { "name": "punctuation.definition.markdown" },
+        "4": { "name": "fenced_code.block.language.markdown" },
+        "5": { "name": "fenced_code.block.language.attributes.markdown" }
+      },
+      "endCaptures": {
+        "3": { "name": "punctuation.definition.markdown" }
+      },
+      "patterns": [
+        {
+          "begin": "(^|\\G)(\\s*)(.*)",
+          "while": "(^|\\G)(?!\\s*([`~]{3,})\\s*$)",
+          "contentName": "meta.embedded.block.dhole",
+          "patterns": [{ "include": "source.dhole" }]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,48 @@
+/* Dhole in Markdown: how a drawn ```dhole block sits in VS Code's Markdown preview. */
+
+.dhole-diagram {
+  margin: 1em 0;
+}
+
+/* Drawn, the text gives way to its picture; a block that draws nothing keeps its text, so the problems below have something to point at. */
+.dhole-diagram--drawn > .dhole-source {
+  display: none;
+}
+
+.dhole-diagram .dhole-picture svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
+.dhole-diagram .dhole-problems {
+  margin: 6px 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.9em;
+}
+
+.dhole-diagram .dhole-problem {
+  margin-top: 4px;
+  padding: 4px 8px;
+  border-left: 3px solid var(--vscode-editorError-foreground, #e34948);
+  background: color-mix(in srgb, var(--vscode-editorError-foreground, #e34948) 10%, transparent);
+}
+
+.dhole-diagram .dhole-problem.dhole-warning {
+  border-left-color: var(--vscode-editorWarning-foreground, #eda100);
+  background: color-mix(in srgb, var(--vscode-editorWarning-foreground, #eda100) 10%, transparent);
+}
+
+.dhole-diagram--unavailable::before {
+  content: "Dhole could not be loaded in this preview.";
+  display: block;
+  font-size: 0.85em;
+  opacity: 0.7;
+}
+
+/* A .dhole file's own preview. */
+body.dhole-file-preview {
+  padding: 16px;
+}

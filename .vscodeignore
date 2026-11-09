@@ -1,0 +1,12 @@
+**
+!package.json
+!README.md
+!CHANGELOG.md
+!LICENSE
+!images/icon.png
+!images/preview.png
+!language-configuration.json
+!syntaxes/**
+!media/**
+!dist/extension.js
+!vendor/DHOLE-LICENSE
